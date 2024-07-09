@@ -1,7 +1,9 @@
 package hexlet.code;
 
+import hexlet.code.controller.UrlController;
 import hexlet.code.dto.BasePage;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -11,31 +13,49 @@ import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 import gg.jte.resolve.ResourceCodeResolver;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.util.stream.Collectors;
+
+
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 
 public class App {
-    public static Javalin getApp() {
+    public static Javalin getApp() throws SQLException {
 
 
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDatabaseUrl());
 
         var dataSource = new HikariDataSource(hikariConfig);
+        var schemaUrl = App.class.getClassLoader().getResourceAsStream("schema.sql");
+        var sql = new BufferedReader(new InputStreamReader(schemaUrl))
+                .lines().collect(Collectors.joining("\n"));
+
+        // log.info(sql);
+        try (var connection = dataSource.getConnection();
+             var statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
         BaseRepository.dataSource = dataSource;
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
-        app.get("/", ctx -> {
-            var page = new BasePage();
-            ctx.render("urls/index.jte", model("page", page));
-        });
+
+        app.get(NamedRoutes.rootPath(), UrlController::root);
+        app.get(NamedRoutes.buildUrlPath(), UrlController::build);
+        app.post(NamedRoutes.urlsPath(), UrlController::create);
+        app.get(NamedRoutes.urlsPath(), UrlController::index);
+        app.get(NamedRoutes.urlPath("{id}"), UrlController::show);
+
         return app;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Javalin app = getApp();
         app.start(7070);
     }
