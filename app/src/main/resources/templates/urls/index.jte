@@ -3,11 +3,9 @@
 @param UrlsPage page
 
 @template.layout.page(
+page = page,
 content = @`
     <h1>Все адреса</h1>
-    <div class="mb-3">
-        <a href="${NamedRoutes.buildUrlPath()}">Добавить новый адрес</a>
-    </div>
     <table class="table table-striped">
         @for(var url : page.getUrls())
             <tr>

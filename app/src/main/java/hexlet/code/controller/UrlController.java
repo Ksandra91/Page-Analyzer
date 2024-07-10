@@ -25,13 +25,14 @@ import java.time.format.DateTimeFormatter;
 public class UrlController {
 
     public static void root(Context ctx) {
-        ctx.render("index.jte");
+        var page = new BuildUrlPage();
+        ctx.render("index.jte", model("page", page));
     }
 
-    public static void build(Context ctx) {
-        var page = new BuildUrlPage();
-        ctx.render("urls/build.jte", model("page", page));
-    }
+//    public static void build(Context ctx) {
+//        var page = new BuildUrlPage();
+//        ctx.render("urls/build.jte", model("page", page));
+//    }
 
 //    public static void create(Context ctx) throws SQLException, URISyntaxException, MalformedURLException {
 //
@@ -57,27 +58,46 @@ public class UrlController {
 //        }
 //    }
 
-    public static void create(Context ctx) throws SQLException, URISyntaxException, MalformedURLException {
+    public static void create(Context ctx) throws SQLException, URISyntaxException {
 
 
         var url = ctx.formParam("url");
 
-        URL param = new URL(url);
-        String name = param.getProtocol() + param.getAuthority();
-        var urlObj = new Url(name, Timestamp.valueOf(LocalDateTime.now()));
-        UrlRepository.save(urlObj);
-        ctx.sessionAttribute("flash", "Страница успешно добавлена");
-        ctx.sessionAttribute("flash-type", "success");
-        ctx.redirect(NamedRoutes.urlsPath());
+        URI uri = new URI(url);
+
+        try {
+            URL param = uri.toURL();
+            String name = param.getProtocol() + "://" + param.getAuthority();
+            var urlObj = new Url(name, Timestamp.valueOf(LocalDateTime.now()));
+            if (UrlRepository.findName(name).isPresent()) {
+                ctx.sessionAttribute("flash", "Страница уже существует");
+                ctx.sessionAttribute("flash-type", "danger");
+                ctx.redirect(NamedRoutes.urlsPath());
+            } else {
+                UrlRepository.save(urlObj);
+                ctx.sessionAttribute("flash", "Страница успешно добавлена");
+                ctx.sessionAttribute("flash-type", "success");
+                ctx.redirect(NamedRoutes.urlsPath());
+            }
+        } catch (MalformedURLException e) {
+            var page = new BuildUrlPage(url,"Некорректный URL","warning");
+            //ctx.sessionAttribute("flash", "Некорректный URL");
+           // ctx.sessionAttribute("flash-type", "warning");
+           // ctx.redirect(NamedRoutes.rootPath());
+            ctx.render("index.jte", model("page", page));
+        }
 
 
     }
 
     public static void index(Context ctx) throws SQLException {
         var urls = UrlRepository.getEntities();
-        var page = new UrlsPage(urls);
-        // page.setFlash(ctx.consumeSessionAttribute("flash"));
-        // page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
+        String flash = ctx.consumeSessionAttribute("flash");
+        String flashtype = ctx.consumeSessionAttribute("flash-type");
+        // Добавляем flash в определение CoursesPage
+        var page = new UrlsPage(urls, flash, flashtype);
+        //  page.setFlash(ctx.consumeSessionAttribute("flash"));
+        //  page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/index.jte", model("page", page));
     }
 
