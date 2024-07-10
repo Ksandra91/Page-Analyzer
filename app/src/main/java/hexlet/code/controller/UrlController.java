@@ -58,14 +58,14 @@ public class UrlController {
 //        }
 //    }
 
-    public static void create(Context ctx) throws SQLException, URISyntaxException {
+    public static void create(Context ctx) throws SQLException, URISyntaxException, MalformedURLException {
 
 
         var url = ctx.formParam("url");
 
         URI uri = new URI(url);
 
-        try {
+      //  try {
             URL param = uri.toURL();
             String name = param.getProtocol() + "://" + param.getAuthority();
             var urlObj = new Url(name, Timestamp.valueOf(LocalDateTime.now()));
@@ -79,13 +79,13 @@ public class UrlController {
                 ctx.sessionAttribute("flash-type", "success");
                 ctx.redirect(NamedRoutes.urlsPath());
             }
-        } catch (MalformedURLException e) {
-            var page = new BuildUrlPage(url,"Некорректный URL","warning");
-            //ctx.sessionAttribute("flash", "Некорректный URL");
-           // ctx.sessionAttribute("flash-type", "warning");
-           // ctx.redirect(NamedRoutes.rootPath());
-            ctx.render("index.jte", model("page", page));
-        }
+//        } catch (MalformedURLException e) {
+//            var page = new BuildUrlPage(url,"Некорректный URL","warning");
+//            //ctx.sessionAttribute("flash", "Некорректный URL");
+//           // ctx.sessionAttribute("flash-type", "warning");
+//           // ctx.redirect(NamedRoutes.rootPath());
+//            ctx.render("index.jte", model("page", page));
+//        }
 
 
     }
