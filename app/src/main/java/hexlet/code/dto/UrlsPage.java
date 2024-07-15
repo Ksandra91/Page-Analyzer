@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 
 public class UrlsPage extends BasePage{
-    private List<Url> urls;
+    private final List<Url> urls;
 
     public UrlsPage(List<Url> urls, String flash, String flashType) {
         super();

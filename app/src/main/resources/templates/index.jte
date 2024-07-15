@@ -1,6 +1,6 @@
 @importhexlet.code.util.NamedRoutes
-@import hexlet.code.dto.BuildUrlPage
-@param BuildUrlPage page
+@import hexlet.code.dto.IndexUrlPage
+@param IndexUrlPage page
 
 @template.layout.page(
 content = @`
