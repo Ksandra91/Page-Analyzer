@@ -2,6 +2,7 @@ package hexlet.code.controller;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
+import hexlet.code.dto.BasePage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.util.NamedRoutes;
@@ -24,7 +25,9 @@ import java.time.LocalDateTime;
 public class UrlController {
 
     public static void root(Context ctx) {
-        var page = new IndexUrlPage();
+        String flash = ctx.consumeSessionAttribute("flash");
+        String flashtype = ctx.consumeSessionAttribute("flash-type");
+        var page = new IndexUrlPage(flash, flashtype);
         ctx.render("index.jte", model("page", page));
     }
 

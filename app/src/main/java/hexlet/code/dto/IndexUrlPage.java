@@ -20,4 +20,10 @@ public class IndexUrlPage extends BasePage {
         super.setFlashType(flashType);
     }
 
+    public IndexUrlPage(String flash, String flashType) {
+        super();
+        super.setFlash(flash);
+        super.setFlashType(flashType);
+    }
+
 }
