@@ -1,10 +1,10 @@
 package gg.jte.generated.ondemand;
 import hexlet.code.util.NamedRoutes;
-import hexlet.code.dto.BuildUrlPage;
+import hexlet.code.dto.IndexUrlPage;
 public final class JteindexGenerated {
 	public static final String JTE_NAME = "index.jte";
 	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,4,4,6,6,9,9,9,9,9,9,9,9,9,13,13,13,13,13,13,13,13,13,20,20,20,20,20,2,2,2,2};
-	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, BuildUrlPage page) {
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, IndexUrlPage page) {
 		jteOutput.writeContent("\n");
 		gg.jte.generated.ondemand.layout.JtepageGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
 			public void writeTo(gg.jte.html.HtmlTemplateOutput jteOutput) {
@@ -31,7 +31,7 @@ public final class JteindexGenerated {
 		}, null);
 	}
 	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
-		BuildUrlPage page = (BuildUrlPage)params.get("page");
+		IndexUrlPage page = (IndexUrlPage)params.get("page");
 		render(jteOutput, jteHtmlInterceptor, page);
 	}
 }
