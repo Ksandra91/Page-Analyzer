@@ -2,7 +2,6 @@ package hexlet.code.controller;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
-import hexlet.code.dto.BasePage;
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.util.NamedRoutes;

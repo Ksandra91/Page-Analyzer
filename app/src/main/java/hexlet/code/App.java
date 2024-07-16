@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import hexlet.code.controller.UrlController;
-import hexlet.code.dto.BasePage;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
@@ -17,9 +16,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
-
-
-import static io.javalin.rendering.template.TemplateUtil.model;
 
 
 public class App {
