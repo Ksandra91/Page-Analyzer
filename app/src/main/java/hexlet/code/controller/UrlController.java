@@ -31,16 +31,13 @@ public class UrlController {
     }
 
 
-    public static void create(Context ctx) throws SQLException, URISyntaxException {
-
-        var url = ctx.formParam("url");
-
-        URI uri = new URI(url);
-
-        URL param;
+    public static void create(Context ctx) throws SQLException{
+        var inputUrl = ctx.formParam("url");
+        URL parsedUrl;
 
         try {
-            param = uri.toURL();
+            var uri = new URI(inputUrl);
+            parsedUrl = uri.toURL();
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
@@ -48,7 +45,7 @@ public class UrlController {
             return;
         }
 
-        String name = param.getProtocol() + "://" + param.getAuthority();
+        String name = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
         var urlObj = new Url(name, Timestamp.valueOf(LocalDateTime.now()));
         if (UrlRepository.findName(name).isPresent()) {
             ctx.sessionAttribute("flash", "Страница уже существует");

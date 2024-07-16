@@ -42,6 +42,11 @@ public class App {
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
+        app.before(ctx -> {
+            ctx.contentType("text/html; charset=utf-8");
+        });
+
+
         app.get(NamedRoutes.rootPath(), UrlController::root);
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.urlsPath(), UrlController::showList);
@@ -52,7 +57,7 @@ public class App {
 
     public static void main(String[] args) throws SQLException {
         Javalin app = getApp();
-        app.start(7070);
+        app.start(getPort());
     }
 
     public static String getDatabaseUrl() {
@@ -64,6 +69,11 @@ public class App {
         ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
         return templateEngine;
+    }
+
+    private static int getPort() {
+        String port = System.getenv().getOrDefault("PORT", "3000");
+        return Integer.valueOf(port);
     }
 
 }
