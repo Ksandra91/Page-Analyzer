@@ -6,12 +6,12 @@ import hexlet.code.dto.UrlsPage;
 import hexlet.code.dto.UrlPage;
 import hexlet.code.util.NamedRoutes;
 
-import hexlet.code.dto.IndexUrlPage;
 import hexlet.code.dto.MainPage;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
+import hexlet.code.repository.CheckRepository;
 
 
 import java.net.URI;
@@ -74,7 +74,9 @@ public class UrlController {
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url not found"));
 
-        var page = new UrlPage(url);
+        var cheks = CheckRepository.findAllCheck(id);
+        var page = new UrlPage(url, cheks);
+
         ctx.render("urls/show.jte", model("page", page));
     }
 }
