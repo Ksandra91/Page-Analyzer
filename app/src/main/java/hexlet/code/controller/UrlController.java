@@ -7,6 +7,7 @@ import hexlet.code.dto.UrlPage;
 import hexlet.code.util.NamedRoutes;
 
 import hexlet.code.dto.IndexUrlPage;
+import hexlet.code.dto.MainPage;
 import hexlet.code.model.Url;
 import hexlet.code.repository.UrlRepository;
 import io.javalin.http.Context;
@@ -14,24 +15,25 @@ import io.javalin.http.NotFoundResponse;
 
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 
 public class UrlController {
 
     public static void root(Context ctx) {
-        String flash = ctx.consumeSessionAttribute("flash");
-        String flashtype = ctx.consumeSessionAttribute("flash-type");
-        var page = new IndexUrlPage(flash, flashtype);
-        ctx.render("index.jte", model("page", page));
+        var page = new MainPage();
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
+        ctx.render("index.jte", Collections.singletonMap("page", page));
+
     }
 
 
-    public static void create(Context ctx) throws SQLException{
+    public static void create(Context ctx) throws SQLException {
         var inputUrl = ctx.formParam("url");
         URL parsedUrl;
 

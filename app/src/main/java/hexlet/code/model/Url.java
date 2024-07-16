@@ -2,6 +2,7 @@ package hexlet.code.model;
 
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class Url {
 
     private String name;
     private Timestamp createdAt;
+    private List<UrlCheck> checkList;
 
     public Url(String name, Timestamp createdAt) {
         this.name = name;

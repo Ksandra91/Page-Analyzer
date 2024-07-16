@@ -1,6 +1,7 @@
-@importhexlet.code.util.NamedRoutes
-@import hexlet.code.dto.IndexUrlPage
-@param IndexUrlPage page
+@importhexlet.code.dto.BasePage
+@import hexlet.code.util.NamedRoutes
+@import hexlet.code.dto.MainPage
+@param BasePage page
 
 @template.layout.page(
 content = @`
@@ -10,7 +11,7 @@ content = @`
             <div class="mb-3">
                 <label class="form-label">
                     Адрес
-                    <input type="text" class="form-control" name="url" value="${page.getName()}"/>
+                    <input type="text" class="form-control" name="url" value=""/>
                 </label>
             </div>
             <input type="submit" class="btn btn-primary" value="Сохранить"/>
