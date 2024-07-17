@@ -30,12 +30,6 @@ public class UrlCheck {
         this.createdAt = created;
     }
 
-//    public UrlCheck(Long urlId, int statusCode, Timestamp created) {
-//        this.urlId = urlId;
-//        this.statusCode = statusCode;
-//        this.createdAt = created;
-//    }
-
     public String dateToString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss");
         return createdAt.toLocalDateTime().format(formatter);
