@@ -55,22 +55,21 @@ public class CheckRepository extends BaseRepository {
     }
 
 
-    public static Optional<UrlCheck> findLastCheck(Long id) throws SQLException {
+    public static Optional<UrlCheck> findLastCheck(Long urlId) throws SQLException {
         var sql = "SELECT * FROM url_checks WHERE url_id = ? ORDER BY id DESC LIMIT 1";
 
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
+            stmt.setLong(1, urlId);
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
-                var urlId = resultSet.getLong("url_id");
+                var id = resultSet.getLong("id");
                 var statusCode = resultSet.getInt("status_code");
                 var h1 = resultSet.getString("h1");
                 var title = resultSet.getString("title");
                 var description = resultSet.getString("description");
                 var created = resultSet.getTimestamp("created_at");
-                var result = new UrlCheck(urlId, statusCode, h1, title, description, created);
-                result.setId(id);
+                var result = new UrlCheck(id, created, statusCode, title, h1, description, urlId);
                 return Optional.of(result);
 
             }
