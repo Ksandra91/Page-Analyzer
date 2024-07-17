@@ -47,8 +47,6 @@ public class App {
             ctx.contentType("text/html; charset=utf-8");
         });
 
-
-
         app.get(NamedRoutes.rootPath(), UrlController::root);
         app.post(NamedRoutes.urlsPath(), UrlController::create);
         app.get(NamedRoutes.urlsPath(), UrlController::showList);

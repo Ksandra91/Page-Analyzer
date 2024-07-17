@@ -6,6 +6,7 @@ import hexlet.code.model.UrlCheck;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public class CheckRepository extends BaseRepository {
@@ -32,9 +33,31 @@ public class CheckRepository extends BaseRepository {
         }
     }
 
-    public static ArrayList<UrlCheck> findAllCheck(Long id) throws SQLException {
-        var sql = "SELECT * FROM url_checks WHERE id = ?";
+    public static ArrayList<UrlCheck> findAllCheck(Long urlId) throws SQLException {
+        var sql = "SELECT * FROM url_checks WHERE url_id = ?";
         ArrayList<UrlCheck> result = new ArrayList<>();
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, urlId);
+            var resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                var id = resultSet.getLong("id");
+                var statusCode = resultSet.getInt("status_code");
+                var h1 = resultSet.getString("h1");
+                var title = resultSet.getString("title");
+                var description = resultSet.getString("description");
+                var created = resultSet.getTimestamp("created_at");
+                var urlCheck = new UrlCheck(id, created, statusCode, title, h1, description, urlId);
+                result.add(urlCheck);
+            }
+            return result;
+        }
+    }
+
+
+    public static Optional<UrlCheck> findLastCheck(Long id) throws SQLException {
+        var sql = "SELECT * FROM url_checks WHERE url_id = ? ORDER BY id DESC LIMIT 1";
+
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -46,11 +69,12 @@ public class CheckRepository extends BaseRepository {
                 var title = resultSet.getString("title");
                 var description = resultSet.getString("description");
                 var created = resultSet.getTimestamp("created_at");
-                var urlCheck = new UrlCheck(urlId, statusCode, h1, title, description, created);
-                urlCheck.setId(id);
-                result.add(urlCheck);
+                var result = new UrlCheck(urlId, statusCode, h1, title, description, created);
+                result.setId(id);
+                return Optional.of(result);
+
             }
-            return result;
+            return Optional.empty();
         }
     }
 }
