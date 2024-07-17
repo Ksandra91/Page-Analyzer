@@ -25,12 +25,6 @@ public class Url {
         this.createdAt = createdAt;
     }
 
-    public Url(String name,Timestamp createdAt,UrlCheck lastCheck) {
-        this.name = name;
-        this.createdAt = createdAt;
-        this.lastCheck = lastCheck;
-
-    }
 
     public String dateToString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss");
