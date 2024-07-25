@@ -4,7 +4,6 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.dto.UrlPage;
-import hexlet.code.model.UrlCheck;
 import hexlet.code.util.NamedRoutes;
 
 import hexlet.code.dto.MainPage;
@@ -18,10 +17,8 @@ import hexlet.code.repository.CheckRepository;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Optional;
 
 
 public class UrlController {
@@ -50,7 +47,8 @@ public class UrlController {
         }
 
         String name = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
-        var urlObj = new Url(name, Timestamp.valueOf(LocalDateTime.now()));
+        var urlObj = new Url(name);
+        urlObj.setCreatedAt(LocalDateTime.now());
         if (UrlRepository.findName(name).isPresent()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "danger");
@@ -65,10 +63,6 @@ public class UrlController {
 
     public static void showList(Context ctx) throws SQLException {
         var urls = UrlRepository.getEntities();
-        for (var url : urls) {
-            Optional<UrlCheck> last = CheckRepository.findLastCheck(url.getId());
-            last.ifPresent(url::setLastCheck);
-        }
         String flash = ctx.consumeSessionAttribute("flash");
         String flashtype = ctx.consumeSessionAttribute("flash-type");
         var page = new UrlsPage(urls, flash, flashtype);

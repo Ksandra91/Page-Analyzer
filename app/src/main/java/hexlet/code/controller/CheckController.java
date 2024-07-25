@@ -13,7 +13,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -38,7 +37,11 @@ public class CheckController {
             h1 = h1temp == null ? "" : h1temp.text();
             var descriptionTemp = document.selectFirst("meta[name=description]");
             description = descriptionTemp == null ? "" : descriptionTemp.attr("content");
-
+            UrlCheck check = new UrlCheck(urlId, statusCode, h1, title,
+                    description, LocalDateTime.now());
+            CheckRepository.save(check);
+            ctx.sessionAttribute("flash", "Страница успешно добавлена");
+            ctx.sessionAttribute("flash-type", "success");
             Unirest.shutDown();
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Неверный URL");
@@ -46,11 +49,6 @@ public class CheckController {
             ctx.redirect(NamedRoutes.urlPath(String.valueOf(urlId)));
             return;
         }
-        UrlCheck check = new UrlCheck(urlId, statusCode, h1, title,
-                description, Timestamp.valueOf(LocalDateTime.now()));
-        CheckRepository.save(check);
-        ctx.sessionAttribute("flash", "Страница успешно добавлена");
-        ctx.sessionAttribute("flash-type", "success");
         ctx.redirect(NamedRoutes.urlPath(urlId));
     }
 }

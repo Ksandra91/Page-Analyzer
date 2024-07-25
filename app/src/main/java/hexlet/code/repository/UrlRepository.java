@@ -2,12 +2,14 @@ package hexlet.code.repository;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
 
 import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,7 +21,7 @@ public class UrlRepository extends BaseRepository {
         try (var conn = dataSource.getConnection();
              var preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
-            preparedStatement.setTimestamp(2, url.getCreatedAt());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             // Устанавливаем ID в сохраненную сущность
@@ -39,8 +41,9 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var name = resultSet.getString("name");
-                var created = resultSet.getString("created_at");
-                var url = new Url(name, Timestamp.valueOf(created));
+                var created = resultSet.getTimestamp("created_at");
+                var url = new Url(name);
+                url.setCreatedAt(created.toLocalDateTime());
                 url.setId(id);
                 return Optional.of(url);
             }
@@ -56,8 +59,9 @@ public class UrlRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 var id = resultSet.getLong("id");
-                var created = resultSet.getString("created_at");
-                var url = new Url(name, Timestamp.valueOf(created));
+                var created = resultSet.getTimestamp("created_at");
+                var url = new Url(name);
+                url.setCreatedAt(created.toLocalDateTime());
                 url.setId(id);
                 return Optional.of(url);
             }
@@ -66,7 +70,10 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static List<Url> getEntities() throws SQLException {
-        var sql = "SELECT * FROM urls";
+        var sql = "SELECT id, name,(SELECT status_code FROM url_checks "
+                + "WHERE url_checks.url_id = urls.id ORDER BY id DESC LIMIT 1) AS status_code,"
+                + "(SELECT created_at FROM url_checks "
+                + "WHERE url_checks.url_id = urls.id ORDER BY id DESC LIMIT 1) AS last FROM urls";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             var resultSet = stmt.executeQuery();
@@ -74,8 +81,12 @@ public class UrlRepository extends BaseRepository {
             while (resultSet.next()) {
                 var id = resultSet.getLong("id");
                 var name = resultSet.getString("name");
-                var created = resultSet.getString("created_at");
-                var url = new Url(name, Timestamp.valueOf(created));
+                var statusCode = resultSet.getInt("status_code");
+                var last = resultSet.getTimestamp("last");
+                var url = new Url(name);
+                if (statusCode != 0) {
+                    url.setLastCheck(new UrlCheck(id, statusCode, last.toLocalDateTime()));
+                }
                 url.setId(id);
                 result.add(url);
             }

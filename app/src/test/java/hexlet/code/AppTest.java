@@ -3,6 +3,7 @@ package hexlet.code;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import hexlet.code.model.Url;
+import hexlet.code.repository.CheckRepository;
 import hexlet.code.repository.UrlRepository;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import hexlet.code.util.NamedRoutes;
@@ -76,7 +76,8 @@ public class AppTest {
 
     @Test
     public void testUrlPage() throws SQLException {
-        var url = new Url("https://www.google.com", Timestamp.valueOf(LocalDateTime.now()));
+        var url = new Url("https://www.google.com");
+        url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/urls/" + url.getId());
@@ -97,14 +98,14 @@ public class AppTest {
         urlName = mockServer.url("/").toString();
         var mockResponse = new MockResponse().setBody("url=/");
         mockServer.enqueue(mockResponse);
-        var url = new Url(urlName, Timestamp.valueOf(LocalDateTime.now()));
+        var url = new Url(urlName);
+        url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
 
         JavalinTest.test(app, (server, client) -> {
             var response = client.post(NamedRoutes.urlChecksPath(url.getId()));
             assertThat(response.code()).isEqualTo(200);
-            assertThat(response.body().string()).contains("200");
-
+            assertThat(CheckRepository.findAllCheck(url.getId()).size()).isGreaterThan(0);
         });
     }
 

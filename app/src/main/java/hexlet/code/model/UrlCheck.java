@@ -1,7 +1,6 @@
 package hexlet.code.model;
 
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,17 +10,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class UrlCheck {
+public final class UrlCheck {
 
     private Long id;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
     private int statusCode;
     private String title;
     private String h1;
     private String description;
     private Long urlId;
 
-    public UrlCheck(Long urlId, int statusCode, String h1, String title, String description, Timestamp created) {
+    public UrlCheck(Long urlId, int statusCode, String h1, String title, String description, LocalDateTime created) {
         this.urlId = urlId;
         this.statusCode = statusCode;
         this.h1 = h1;
@@ -30,8 +29,9 @@ public class UrlCheck {
         this.createdAt = created;
     }
 
-    public String dateToString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss");
-        return createdAt.toLocalDateTime().format(formatter);
+    public UrlCheck(Long urlId, int statusCode, LocalDateTime created) {
+        this.urlId = urlId;
+        this.statusCode = statusCode;
+        this.createdAt = created;
     }
 }

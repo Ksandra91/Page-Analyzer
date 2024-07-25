@@ -1,5 +1,5 @@
 # Page Analizer
-***
+
 ### Page Analyzer is a site that analyzes specified pages for SEO suitability.
 
 ## [Link](https://site-analizer.onrender.com)
