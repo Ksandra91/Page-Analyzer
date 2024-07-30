@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 
 public final class UrlCheck {
 
@@ -20,18 +22,12 @@ public final class UrlCheck {
     private String description;
     private Long urlId;
 
-    public UrlCheck(Long urlId, int statusCode, String h1, String title, String description, LocalDateTime created) {
+    public UrlCheck(Long urlId, int statusCode, String h1, String title, String description) {
         this.urlId = urlId;
         this.statusCode = statusCode;
         this.h1 = h1;
         this.title = title;
         this.description = description;
-        this.createdAt = created;
     }
 
-    public UrlCheck(Long urlId, int statusCode, LocalDateTime created) {
-        this.urlId = urlId;
-        this.statusCode = statusCode;
-        this.createdAt = created;
-    }
 }

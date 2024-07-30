@@ -85,7 +85,11 @@ public class UrlRepository extends BaseRepository {
                 var last = resultSet.getTimestamp("last");
                 var url = new Url(name);
                 if (statusCode != 0) {
-                    url.setLastCheck(new UrlCheck(id, statusCode, last.toLocalDateTime()));
+                    UrlCheck urlCheck = new UrlCheck();
+                    urlCheck.setUrlId(id);
+                    urlCheck.setStatusCode(statusCode);
+                    urlCheck.setCreatedAt(last.toLocalDateTime());
+                    url.setLastCheck(urlCheck);
                 }
                 url.setId(id);
                 result.add(url);

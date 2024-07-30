@@ -13,7 +13,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 
 public class CheckController {
@@ -23,22 +22,17 @@ public class CheckController {
         Url url = UrlRepository.find(urlId)
                 .orElseThrow(() -> new NotFoundResponse("Url not found"));
 
-        HttpResponse<String> response;
-        int statusCode;
-        String title;
-        String h1;
-        String description;
         try {
-            response = Unirest.get(url.getName()).asString();
-            statusCode = response.getStatus();
+            HttpResponse<String> response = Unirest.get(url.getName()).asString();
+            int statusCode = response.getStatus();
             Document document = Jsoup.parse(response.getBody());
-            title = document.title();
+            String title = document.title();
             var h1temp = document.selectFirst("h1");
-            h1 = h1temp == null ? "" : h1temp.text();
+            String h1 = h1temp == null ? "" : h1temp.text();
             var descriptionTemp = document.selectFirst("meta[name=description]");
-            description = descriptionTemp == null ? "" : descriptionTemp.attr("content");
+            String description = descriptionTemp == null ? "" : descriptionTemp.attr("content");
             UrlCheck check = new UrlCheck(urlId, statusCode, h1, title,
-                    description, LocalDateTime.now());
+                    description);
             CheckRepository.save(check);
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flash-type", "success");

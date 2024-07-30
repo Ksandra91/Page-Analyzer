@@ -17,7 +17,6 @@ import hexlet.code.repository.CheckRepository;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 
@@ -48,7 +47,6 @@ public class UrlController {
 
         String name = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
         var urlObj = new Url(name);
-        urlObj.setCreatedAt(LocalDateTime.now());
         if (UrlRepository.findName(name).isPresent()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "danger");
