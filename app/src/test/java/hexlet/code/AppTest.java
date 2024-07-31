@@ -117,7 +117,7 @@ public class AppTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.post(NamedRoutes.urlChecksPath(url.getId()));
             List<UrlCheck> checks = CheckRepository.findAllCheck(url.getId());
-            var check = checks.getFirst();
+            var check = checks.get(0);
             assertThat(response.code()).isEqualTo(200);
            // assertThat(check.getStatusCode()).isEqualTo(200);
             assertThat(check.getH1()).isEqualTo("Test h1");
