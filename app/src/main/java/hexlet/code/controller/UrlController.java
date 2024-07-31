@@ -69,9 +69,10 @@ public class UrlController {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url not found"));
-
+        String flash = ctx.consumeSessionAttribute("flash");
+        String flashtype = ctx.consumeSessionAttribute("flash-type");
         var cheks = CheckRepository.findAllCheck(id);
-        var page = new UrlPage(url, cheks);
+        var page = new UrlPage(url, cheks, flash, flashtype);
 
         ctx.render("urls/show.jte", model("page", page));
     }

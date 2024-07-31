@@ -14,9 +14,10 @@ public class UrlPage extends BasePage {
     private Url url;
     private List<UrlCheck> checkList;
 
-    public UrlPage(Url url, String flash, String flashType) {
+    public UrlPage(Url url, List<UrlCheck> checkLis, String flash, String flashType) {
         super();
         this.url = url;
+        this.checkList = checkLis;
         super.setFlash(flash);
         super.setFlashType(flashType);
     }
@@ -25,4 +26,5 @@ public class UrlPage extends BasePage {
         super();
         this.url = url;
     }
+
 }

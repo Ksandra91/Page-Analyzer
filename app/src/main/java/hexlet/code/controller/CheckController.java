@@ -33,15 +33,15 @@ public class CheckController {
             String description = descriptionTemp == null ? "" : descriptionTemp.attr("content");
             UrlCheck check = new UrlCheck(urlId, statusCode, h1, title,
                     description);
-            CheckRepository.save(check);
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
-            ctx.sessionAttribute("flash-type", "success");
             Unirest.shutDown();
+            CheckRepository.save(check);
+
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flash-type", "success");
+
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Неверный URL");
             ctx.sessionAttribute("flash-type", "danger");
-            ctx.redirect(NamedRoutes.urlPath(String.valueOf(urlId)));
-            return;
         }
         ctx.redirect(NamedRoutes.urlPath(urlId));
     }
