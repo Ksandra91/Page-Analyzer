@@ -46,7 +46,7 @@ public class AppTest {
                 .setResponseCode(200);
         mockServer.enqueue(mockResponse);
         mockServer.start();
-        urlName = mockServer.url("/test").toString();
+
 
     }
 
@@ -91,7 +91,7 @@ public class AppTest {
 
     @Test
     public void testUrlPage() throws SQLException {
-        var url = new Url(urlName);
+        var url = new Url("https://www.google.com");
         url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
         JavalinTest.test(app, (server, client) -> {
@@ -110,6 +110,7 @@ public class AppTest {
 
     @Test
     public void testCheckUrl() throws SQLException {
+        urlName = mockServer.url("/").toString();
         var url = new Url(urlName);
         url.setCreatedAt(LocalDateTime.now());
         UrlRepository.save(url);
@@ -119,7 +120,7 @@ public class AppTest {
             List<UrlCheck> checks = CheckRepository.findAllCheck(url.getId());
             var check = checks.get(0);
             assertThat(response.code()).isEqualTo(200);
-           // assertThat(check.getStatusCode()).isEqualTo(200);
+            assertThat(check.getStatusCode()).isEqualTo(200);
             assertThat(check.getH1()).isEqualTo("Test h1");
             assertThat(check.getDescription()).isEqualTo("Test description");
         });
