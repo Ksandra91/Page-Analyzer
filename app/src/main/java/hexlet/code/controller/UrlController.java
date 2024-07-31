@@ -19,6 +19,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Collections;
 
+import hexlet.code.util.LinkChecker;
+
 
 public class UrlController {
 
@@ -30,14 +32,15 @@ public class UrlController {
 
     }
 
-
     public static void create(Context ctx) throws SQLException {
         var inputUrl = ctx.formParam("url");
         URL parsedUrl;
-
+        String name;
         try {
             var uri = new URI(inputUrl);
             parsedUrl = uri.toURL();
+            name = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
+            LinkChecker.isWebAdress(name);
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
@@ -45,7 +48,6 @@ public class UrlController {
             return;
         }
 
-        String name = parsedUrl.getProtocol() + "://" + parsedUrl.getAuthority();
         var urlObj = new Url(name);
         if (UrlRepository.findName(name).isPresent()) {
             ctx.sessionAttribute("flash", "Страница уже существует");
@@ -77,4 +79,6 @@ public class UrlController {
 
         ctx.render("urls/show.jte", model("page", page));
     }
+
+
 }

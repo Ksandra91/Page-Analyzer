@@ -39,7 +39,7 @@ public class CheckController {
             Unirest.shutDown();
         } catch (Exception e) {
             ctx.sessionAttribute("flash", "Неверный URL");
-            ctx.sessionAttribute("alertType", "danger");
+            ctx.sessionAttribute("flash-type", "danger");
             ctx.redirect(NamedRoutes.urlPath(String.valueOf(urlId)));
             return;
         }
