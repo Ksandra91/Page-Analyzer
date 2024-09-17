@@ -1,4 +1,4 @@
-# Page Analizer
+# Page Analyzer
 
 ### Page Analyzer is a site that analyzes specified pages for SEO suitability.
 
